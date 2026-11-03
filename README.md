@@ -1,6 +1,6 @@
 # Queen's Domain Difficulty Mod
 
-A small Windows tool that adds difficulty presets to **Queen's Domain**. Pick a preset, click **Apply**, and play. Switch back to the normal game at any time.
+A small Windows tool that adds difficulty settings to **Queen's Domain**: easier presets, or Custom sliders that can make the game easier or harder. Pick one, click **Apply**, and play. Switch back to the normal game at any time.
 
 **[⬇ Download the latest release](https://github.com/OldRustyDusty/QueensDomainDifficultyMod/releases/latest)**: get `QueensDomainDifficultyMod-<version>.zip`, or the standalone `.exe`.
 
@@ -11,6 +11,9 @@ A small Windows tool that adds difficulty presets to **Queen's Domain**. Pick a 
 | **Normal** | Original | Original | Original (this uninstalls the mod) |
 | **Easy** | −30% | ÷1.3 (as if you dealt 30% more damage) | Half the hits to break |
 | **Story** | −50% | −50% | A quarter of the hits to break |
+| **Custom** | 1%–200% (slider) | set by the *Your damage* slider, 1%–200% | Default, Half or One-third health |
+
+**Custom** has two sliders, *Your damage* and *Enemy damage*, each from 1% to 200% of normal, with a box beside each for exact values. Above 100% makes that side hit harder, so Custom can also make the game harder. *Your damage* is applied as enemy health × 100 / your-damage-%, which takes exactly the same number of hits. The tool remembers your last Custom settings.
 
 The presets cover every enemy that uses the game's enemy stat files, bosses included, and every breakable crate, barrel and sci-fi crate type.
 
@@ -36,6 +39,7 @@ Settings and a log live in `%APPDATA%\QueensDomainDifficultyMod`.
 
 ```
 QueensDomainDifficultyMod.exe --preset normal|easy|story [--game-dir PATH]
+QueensDomainDifficultyMod.exe --preset custom [--player-damage 1-200] [--enemy-damage 1-200] [--crates default|half|third]
 QueensDomainDifficultyMod.exe --status [--json] [--game-dir PATH]
 QueensDomainDifficultyMod.exe --verify [--game-dir PATH]
 ```

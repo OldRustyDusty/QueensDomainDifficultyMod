@@ -18,7 +18,7 @@ from .errors import GameNotFoundError, GameRunningError, ModError, PatchError, V
 from .pak_reader import PakError, PakFile
 from .pak_writer import MOUNT_POINT, write_pak
 from .patcher import build_plan
-from .presets import PRESETS
+from .presets import PRESETS, Preset, preset_from_manifest
 from .verify import MANIFEST_NAME, read_manifest, verify_mod_pak
 from .version import APP_NAME, __version__
 
@@ -37,8 +37,9 @@ def _noop(fraction, message):
 @dataclass
 class Status:
     game_dir: str
-    preset: str = None            # 'normal', 'easy', 'story', or None if unknown
+    preset: str = None            # 'normal', 'easy', 'story', 'custom', or None if unknown
     manifest: dict = None
+    installed: Preset = None      # the installed Preset (incl. Custom settings), if readable
     legacy_paks: list = field(default_factory=list)
     other_mods: list = field(default_factory=list)
     game_updated: bool = False    # main pak changed since the mod was applied
@@ -51,8 +52,8 @@ class Status:
             return "Older Easy Mode / Crate Buff paks (from the earlier mod scripts)"
         if self.preset == "normal":
             text = "Normal (no difficulty mod installed)"
-        elif self.preset in PRESETS:
-            text = f"{PRESETS[self.preset].title}"
+        elif self.installed is not None:
+            text = self.installed.summary()
             applied = (self.manifest or {}).get("applied_at", "")
             if applied:
                 text += f" (applied {applied[:16].replace('T', ' ')})"
@@ -99,6 +100,7 @@ def get_status(game_dir):
         if not st.manifest:
             raise ValueError("no manifest")
         st.preset = st.manifest.get("preset")
+        st.installed = preset_from_manifest(st.manifest)
         with PakFile(gamedetect.main_pak_path(game_dir)) as main:
             st.game_updated = st.manifest.get("main_pak") != _main_fingerprint(main)
     except (PakError, OSError, ValueError) as e:
@@ -119,10 +121,12 @@ def _remove(path):
     return False
 
 
-def apply_preset(game_dir, preset_key, progress=_noop):
-    """Install `preset_key`. Returns a result dict (with timing). Raises ModError on failure."""
+def apply_preset(game_dir, preset, progress=_noop):
+    """Install `preset` (a Preset, or the key of a fixed preset). Returns a result dict (with timing).
+    Raises ModError on failure. A Custom preset with every value at default acts like Normal."""
     t0 = time.perf_counter()
-    preset = PRESETS[preset_key]
+    if not isinstance(preset, Preset):
+        preset = PRESETS[preset]
     _check_game_dir(game_dir)
     _check_not_running(game_dir)
     paks = gamedetect.paks_dir(game_dir)
@@ -131,7 +135,8 @@ def apply_preset(game_dir, preset_key, progress=_noop):
     log.info("Applying preset %s to %s", preset.key, game_dir)
     _remove(tmp)  # leftover from an interrupted run
 
-    result = {"preset": preset.key, "game_dir": game_dir}
+    result = {"preset": preset.key, "custom": preset.custom_settings(), "summary": preset.summary(),
+              "vanilla": preset.is_vanilla, "game_dir": game_dir}
     if preset.is_vanilla:
         progress(0.5, "Removing mod files")
         removed = [n for n in (MOD_PAK_NAME,) + LEGACY_PAK_NAMES if _remove(os.path.join(paks, n))]
@@ -149,6 +154,7 @@ def apply_preset(game_dir, preset_key, progress=_noop):
         manifest = {
             "tool": APP_NAME, "tool_version": __version__, "preset": preset.key,
             "multipliers": preset.multipliers(),
+            "custom": preset.custom_settings(),
             "applied_at": datetime.datetime.now().isoformat(timespec="seconds"),
             "main_pak": _main_fingerprint(main),
             "enemy_exports": plan.enemy_exports,
@@ -216,7 +222,7 @@ def verify_installed(game_dir, progress=_noop):
                 manifest = read_manifest(pak)
         except (PakError, OSError, ValueError) as e:
             raise VerifyError(f"The installed mod pak can't be read: {e}")
-        preset = PRESETS.get((manifest or {}).get("preset"))
+        preset = preset_from_manifest(manifest)
         if preset is None or preset.is_vanilla:
             raise VerifyError("The installed mod pak has no valid manifest.")
         if manifest.get("main_pak") != _main_fingerprint(main):
@@ -226,4 +232,5 @@ def verify_installed(game_dir, progress=_noop):
         expected = {(p.uexp_path, e.offset) for p in plan.patches for e in p.edits}
         report = verify_mod_pak(final, main, expected, lambda f, m: progress(0.5 + 0.5 * f, m))
     report["legacy_paks"] = legacy
+    report["summary"] = preset.summary()
     return report

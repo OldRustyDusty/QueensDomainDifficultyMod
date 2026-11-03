@@ -1,8 +1,9 @@
-QUEEN'S DOMAIN DIFFICULTY MOD  -  version 1.0.0
+QUEEN'S DOMAIN DIFFICULTY MOD  -  version 1.1.0
 ================================================
 
-Makes Queen's Domain easier, with a simple window where you pick a
-difficulty and click Apply. You can switch back to the normal game at any time.
+Adds difficulty settings to Queen's Domain: easier presets, or Custom
+sliders that can make it easier or harder. Pick one in a simple window and
+click Apply. You can switch back to the normal game at any time.
 
 The mod builds its file from YOUR OWN copy of the game when you click Apply,
 so it never ships any game files and never changes the original game files.
@@ -21,6 +22,17 @@ PRESETS
           Enemies have half health, so they go down in half the hits.
           Crates and barrels break in about a quarter of the hits.
 
+  Custom  Set it yourself with two sliders (or type an exact number):
+            Your damage    1% to 200% of normal
+            Enemy damage   1% to 200% of normal
+          plus crates and barrels: Default, Half or One-third of their health.
+          Going above 100% makes that side hit harder, so Custom can also
+          make the game HARDER - e.g. your damage 70% and enemy damage 150%.
+          The tool remembers your last Custom settings.
+          (Your damage works by changing enemy health: 150% damage gives
+          enemies 1/1.5 of their health, which takes exactly the same number
+          of hits.)
+
 The changes cover every enemy that uses the game's enemy stat files,
 including bosses, and every breakable crate, barrel and sci-fi crate type.
 
@@ -36,7 +48,7 @@ INSTALL AND USE
    finds Steam installs automatically. If it doesn't, click Browse... and
    pick the game folder. To find it in Steam, right-click Queen's Domain,
    then Manage > Browse local files.
-5. Choose Easy or Story and click Apply. It takes a second or two.
+5. Choose Easy, Story or Custom and click Apply. It takes a second or two.
 6. Start the game and play.
 
 "Currently installed" always shows which preset is active.
@@ -102,6 +114,8 @@ whichever mod loads last wins.
 COMMAND LINE (OPTIONAL)
 -----------------------
     QueensDomainDifficultyMod.exe --preset normal|easy|story [--game-dir PATH]
+    QueensDomainDifficultyMod.exe --preset custom --player-damage 150
+                                  --enemy-damage 80 --crates half|third|default
     QueensDomainDifficultyMod.exe --status [--json] [--game-dir PATH]
     QueensDomainDifficultyMod.exe --verify [--game-dir PATH]
 

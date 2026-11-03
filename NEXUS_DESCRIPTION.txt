@@ -1,5 +1,5 @@
 [size=5][b]Queen's Domain Difficulty Mod[/b][/size]
-[i]Easy and Story difficulty presets, switched with one click. Switch back to Normal any time.[/i]
+[i]Easy and Story difficulty presets, plus Custom sliders (1%-200%) to make the game easier or harder. Switch back to Normal any time.[/i]
 
 Queen's Domain has no difficulty setting, so this small tool adds one. Pick a preset, click [b]Apply[/b], and play.
 
@@ -8,6 +8,7 @@ Queen's Domain has no difficulty setting, so this small tool adds one. Pick a pr
 [*][b]Normal[/b]: the original game. Choosing this also uninstalls the mod.
 [*][b]Easy[/b]: enemies deal [b]30% less damage[/b], have less health (as if you dealt [b]30% more damage[/b]), and crates and barrels break in about [b]half the hits[/b].
 [*][b]Story[/b]: enemies deal [b]half damage[/b] and have [b]half health[/b], and crates and barrels break in about [b]a quarter of the hits[/b].
+[*][b]Custom[/b]: two sliders, [b]Your damage[/b] and [b]Enemy damage[/b], each from [b]1% to 200%[/b], plus crates and barrels at Default, Half or One-third health. Go above 100% to make the game [b]harder[/b].
 [/list]
 These apply to every enemy that uses the game's enemy stat files, bosses included, and to every breakable crate, barrel and sci-fi crate type.
 

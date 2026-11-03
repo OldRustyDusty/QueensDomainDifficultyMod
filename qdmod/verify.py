@@ -17,7 +17,7 @@ from .errors import VerifyError
 from .pak_reader import PakError, PakFile
 from .pak_writer import MOUNT_POINT, PAK_VERSION, _entry_record
 from .patcher import BREAKABLE_PROP, ENEMY_CLASS, ENEMY_PROPS
-from .presets import PRESETS
+from .presets import preset_from_manifest
 from .uasset import AssetError, Package
 
 MANIFEST_NAME = "QDDifficultyMod/manifest.json"
@@ -93,7 +93,7 @@ def verify_mod_pak(mod_path, main_pak, expected_edits=None, progress=lambda f, m
         if manifest_path not in datas:
             raise VerifyError("Verification failed: the mod pak has no manifest")
         manifest = json.loads(datas.pop(manifest_path).decode("utf-8"))
-        preset = PRESETS.get(manifest.get("preset"))
+        preset = preset_from_manifest(manifest)
         if preset is None or preset.is_vanilla:
             raise VerifyError(f"Verification failed: unknown preset {manifest.get('preset')!r} in manifest")
         mult = preset.multipliers()
@@ -132,6 +132,8 @@ def verify_mod_pak(mod_path, main_pak, expected_edits=None, progress=lambda f, m
                 if not any(o <= b < o + 4 for o in slots):
                     fail(f"{ux_path}: byte {b} changed outside any float property")
             for off, (x, prop, cat, m) in slots.items():
+                if m == 1.0:  # e.g. Custom at 100%: this value must stay exactly as it was
+                    cat, m = None, None
                 old = struct.unpack_from("<f", orig_ux, off)[0]
                 want = orig_ux[off:off + 4] if m is None else f32(old * m)
                 got = new_ux[off:off + 4]
@@ -147,8 +149,13 @@ def verify_mod_pak(mod_path, main_pak, expected_edits=None, progress=lambda f, m
             missing = len(set(expected_edits) - changed)
             extra = len(changed - set(expected_edits))
             fail(f"changed floats don't match the plan ({missing} missing, {extra} unexpected)")
-        if counts["enemy"] == 0 or counts["breakable"] == 0:
+        # Custom can leave one side untouched, so only require changes where a multiplier isn't 1.
+        enemy_expected = mult["enemy_hp"] != 1.0 or mult["enemy_damage"] != 1.0
+        breakable_expected = mult["breakable_hp"] != 1.0
+        if (enemy_expected and counts["enemy"] == 0) or (breakable_expected and counts["breakable"] == 0):
             fail(f"too few changes found (enemy {counts['enemy']}, breakable {counts['breakable']})")
+        if (not enemy_expected and counts["enemy"]) or (not breakable_expected and counts["breakable"]):
+            fail(f"unexpected changes found (enemy {counts['enemy']}, breakable {counts['breakable']})")
         if problems:
             raise VerifyError("Verification failed:\n" + "\n".join(problems))
         progress(1.0, "Verified")
