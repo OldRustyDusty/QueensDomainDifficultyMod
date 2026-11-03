@@ -1,0 +1,40 @@
+[size=5][b]Queen's Domain Difficulty Mod[/b][/size]
+[i]Easy and Story difficulty presets, switched with one click. Switch back to Normal any time.[/i]
+
+Queen's Domain has no difficulty setting, so this small tool adds one. Pick a preset, click [b]Apply[/b], and play.
+
+[size=4][b]Presets[/b][/size]
+[list]
+[*][b]Normal[/b]: the original game. Choosing this also uninstalls the mod.
+[*][b]Easy[/b]: enemies deal [b]30% less damage[/b], have less health (as if you dealt [b]30% more damage[/b]), and crates and barrels break in about [b]half the hits[/b].
+[*][b]Story[/b]: enemies deal [b]half damage[/b] and have [b]half health[/b], and crates and barrels break in about [b]a quarter of the hits[/b].
+[/list]
+These apply to every enemy that uses the game's enemy stat files, bosses included, and to every breakable crate, barrel and sci-fi crate type.
+
+[size=4][b]Installation[/b][/size]
+[list=1]
+[*][b]Close the game.[/b]
+[*]Unzip [b]QueensDomainDifficultyMod.exe[/b] anywhere, such as your Desktop.
+[*]Run it. It finds your Steam install automatically. If it doesn't, use [i]Browse...[/i].
+[*]Choose a preset and click [b]Apply[/b]. That's it.
+[/list]
+[b]Uninstall:[/b] choose [b]Normal[/b] and click [i]Restore Normal[/i].
+[b]After a game update:[/b] run the tool and click Apply again. It warns you when this is needed.
+
+[size=4][b]How it works[/b][/size]
+[list]
+[*]The mod file is [b]built from your own game files[/b] when you click Apply. No game files are included in the download.
+[*]The original game files are [b]never modified[/b]. One extra file is added: [i]QueensDomain-WindowsNoEditor_QDDifficultyMod_P.pak[/i] in the game's Paks folder.
+[*]Every file it writes is read back and [b]verified[/b]: checksums, and every changed value equal to the original times the preset multiplier, with nothing else changed. If any check fails, nothing is installed.
+[*]It won't run while the game is open, because the game locks its files.
+[*]Older [i]_EasyMode_P[/i] / [i]_CrateBuff_P[/i] paks from earlier script versions are cleaned up automatically. Other mods are left alone.
+[/list]
+
+[size=4][b]Notes[/b][/size]
+[list]
+[*][b]Windows SmartScreen / antivirus:[/b] the exe isn't code-signed and is packaged with PyInstaller, which sometimes triggers false positives. Click [i]More info > Run anyway[/i] on SmartScreen. The full source code is in the optional files.
+[*]Settings and a log file are kept in [i]%APPDATA%\QueensDomainDifficultyMod[/i].
+[*]A command-line mode is included for advanced users (see README).
+[/list]
+
+[i]Fan-made and not affiliated with the developers of Queen's Domain.[/i]

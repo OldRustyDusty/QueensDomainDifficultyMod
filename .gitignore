@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# PyInstaller output
+build/
+dist/
+*.spec
+
+# Packaged zips (published as GitHub release assets instead)
+release/
+
+*.log
