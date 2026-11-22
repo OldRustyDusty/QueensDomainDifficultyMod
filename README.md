@@ -17,13 +17,42 @@ A small Windows tool that adds difficulty settings to **Queen's Domain**: easier
 
 The presets cover every enemy that uses the game's enemy stat files, bosses included, and every breakable crate, barrel and sci-fi crate type.
 
+## Requirements
+
+- Windows 10 or 11
+- **Queen's Domain** (the full game) on Steam. If the tool can't find your install, point it at the game folder with **Browse...**.
+
 ## How to use
 
-1. **Close Queen's Domain.** The game locks its files while it runs.
-2. Run `QueensDomainDifficultyMod.exe` from anywhere. It finds your Steam install automatically. If it doesn't, use **Browse...**.
-3. Choose a preset and click **Apply**. The tool shows which preset is currently installed.
+1. **Close Queen's Domain completely.** The game locks its files while it runs.
+2. Download the [latest release](https://github.com/OldRustyDusty/QueensDomainDifficultyMod/releases/latest), then unzip it anywhere, such as your Desktop. No installer is needed.
+3. Run `QueensDomainDifficultyMod.exe`. It finds your Steam install automatically. If it doesn't, click **Browse...** and choose the game folder (in Steam: right-click Queen's Domain → *Manage* → *Browse local files*).
+4. Choose **Easy**, **Story** or **Custom**, then click **Apply**. It takes a second or two.
+5. Start the game and play. *Currently installed* in the tool always shows what's active.
 
-To uninstall, choose **Normal**. After a game update, run the tool and click **Apply** again. It warns you when the game has changed since your last apply.
+**To change difficulty**, close the game, pick another option and click **Apply** again.
+
+**To uninstall**, choose **Normal** and click **Restore Normal**. This removes the mod's file and the game is back to the original. You can then delete the exe. Settings and a log are kept in `%APPDATA%\QueensDomainDifficultyMod` if you want to delete those too.
+
+**Upgrading the tool:** just run the new exe. It detects what you have installed.
+
+## After a game update
+
+**Re-apply after every Queen's Domain patch:** close the game, run the tool and click **Apply** again.
+
+The mod is built from your game files *as they were when you clicked Apply*. After a game update, the old mod file still contains pre-update copies of the enemy and crate files. Those copies override the patched versions, so the old mod quietly **undoes parts of the update**, such as rebalanced boss attacks. Re-applying rebuilds the mod from the updated files, so you get the patch's changes with your difficulty settings on top.
+
+The tool detects this for you: when the game has changed since your last apply, it shows a warning (*"The game was updated since this was applied. Click Apply again to refresh the mod."*). Steam's *Verify integrity of game files* doesn't remove the mod, so re-applying (or choosing Normal) is the way to refresh it.
+
+If an update ever changes the game's files so much that the tool can't recognise them, it refuses to apply and changes nothing. Check here for a new version of the tool.
+
+## Compatibility
+
+| Tool | Last tested with |
+|---|---|
+| 1.1.0 | Queen's Domain version 13571 (Steam build 26663759, the November 14, 2026 update) |
+
+The November 14 update changed attack patterns for 27 bosses and minibosses but not the HP and damage values this mod scales, and the tool needed no changes. If you applied the mod before that update, re-apply it.
 
 ## How it works
 
